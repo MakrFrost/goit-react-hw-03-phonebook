@@ -36,17 +36,6 @@ class Phonebook extends Component {
     }));
   };
 
-  // onFormSubmitData = contact => {
-  //   const contact = {
-  //     name: data.name,
-  //     number: data.number,
-  //   };
-
-  //   this.setState(prevState => ({
-  //     contacts: [contact, ...prevState.contacts],
-  //   }));
-  // };
-
   onDeleteContact = id => {
     this.setState(({ contacts }) => {
       const withUpdate = contacts.filter(contact => contact.id !== id);
@@ -60,6 +49,21 @@ class Phonebook extends Component {
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const { filter } = this.state;
